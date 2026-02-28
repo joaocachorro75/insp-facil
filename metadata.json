@@ -1,6 +1,6 @@
 {
-  "name": "SafeInspect - Sistema de Gestão de Inspeções",
-  "description": "Plataforma para gerenciamento de técnicos de segurança, criação dinâmica de formulários de inspeção via IA e relatórios fotográficos.",
+  "name": "Inspetor EPI - Sistema de Gestão de Inspeções",
+  "description": "Plataforma para gerenciamento de técnicos de segurança, criação dinâmica de formulários de inspeção via IA e relatórios fotográficos de EPIs.",
   "requestFramePermissions": [
     "camera"
   ]

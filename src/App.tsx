@@ -5,7 +5,6 @@
 
 import React, { useState, useEffect, useRef } from 'react';
 import { 
-  Shield, 
   Users, 
   ClipboardList, 
   FilePlus, 
@@ -27,7 +26,8 @@ import {
   AlertTriangle,
   BarChart3,
   Edit,
-  Trash2
+  Trash2,
+  HardHat
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 import { 
@@ -83,13 +83,13 @@ const Login = ({ onLogin }: { onLogin: (user: User) => void }) => {
       <motion.div 
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
-        className="w-full max-w-md bg-white p-8 rounded-2xl shadow-xl border border-black/5"
+        className="w-full max-w-md bg-white p-8 rounded-2xl shadow-xl border border-red-100"
       >
         <div className="flex flex-col items-center mb-8">
-          <div className="w-16 h-16 bg-black rounded-2xl flex items-center justify-center mb-4">
-            <Shield className="text-white w-8 h-8" />
+          <div className="w-16 h-16 bg-red-600 rounded-2xl flex items-center justify-center mb-4">
+            <HardHat className="text-white w-8 h-8" />
           </div>
-          <h1 className="text-2xl font-bold tracking-tight">SafeInspect</h1>
+          <h1 className="text-2xl font-bold tracking-tight">Inspetor EPI</h1>
           <p className="text-sm text-gray-500 italic">Gestão de Segurança do Trabalho</p>
         </div>
 
@@ -101,7 +101,7 @@ const Login = ({ onLogin }: { onLogin: (user: User) => void }) => {
               value={identifier} 
               onChange={e => setIdentifier(e.target.value)}
               placeholder="admin ou 5511999999999"
-              className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-black/5 transition-all"
+              className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-red-600/5 transition-all text-base"
               required
             />
           </div>
@@ -111,7 +111,7 @@ const Login = ({ onLogin }: { onLogin: (user: User) => void }) => {
               type="password" 
               value={password} 
               onChange={e => setPassword(e.target.value)}
-              className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-black/5 transition-all"
+              className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-red-600/5 transition-all text-base"
               required
             />
           </div>
@@ -119,7 +119,7 @@ const Login = ({ onLogin }: { onLogin: (user: User) => void }) => {
           <button 
             type="submit" 
             disabled={loading}
-            className="w-full bg-black text-white py-3 rounded-xl font-semibold hover:bg-zinc-800 transition-colors flex items-center justify-center gap-2"
+            className="w-full bg-red-600 text-white py-3 rounded-xl font-semibold hover:bg-red-700 transition-colors flex items-center justify-center gap-2"
           >
             {loading ? <Loader2 className="animate-spin w-5 h-5" /> : 'Entrar'}
           </button>
@@ -201,49 +201,49 @@ const AdminDashboard = ({ user, onLogout }: { user: User, onLogout: () => void }
   };
 
   return (
-    <div className="min-h-screen bg-[#F5F5F5] flex">
-      {/* Sidebar */}
-      <div className="w-64 bg-white border-r border-gray-200 flex flex-col">
+    <div className="min-h-screen bg-[#F5F5F5] flex flex-col md:flex-row">
+      {/* Sidebar - Desktop */}
+      <div className="hidden md:flex w-64 bg-white border-r border-gray-200 flex-col sticky top-0 h-screen">
         <div className="p-6 border-b border-gray-100">
           <div className="flex items-center gap-3 mb-2">
-            <Shield className="w-6 h-6" />
-            <span className="font-bold text-lg tracking-tight">SafeInspect</span>
+            <HardHat className="w-6 h-6 text-red-600" />
+            <span className="font-bold text-lg tracking-tight">Inspetor EPI</span>
           </div>
-          <p className="text-xs text-gray-400 font-mono">ADMIN PANEL</p>
+          <p className="text-xs text-gray-400 font-mono text-red-600/50">ADMIN PANEL</p>
         </div>
         
         <nav className="flex-1 p-4 space-y-2">
           <button 
             onClick={() => setActiveTab('dashboard')}
-            className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all ${activeTab === 'dashboard' ? 'bg-black text-white shadow-lg' : 'text-gray-500 hover:bg-gray-50'}`}
+            className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all ${activeTab === 'dashboard' ? 'bg-red-600 text-white shadow-lg' : 'text-gray-500 hover:bg-gray-50'}`}
           >
             <LayoutDashboard size={20} />
             <span className="text-sm font-medium">Dashboard</span>
           </button>
           <button 
             onClick={() => setActiveTab('inspections')}
-            className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all ${activeTab === 'inspections' ? 'bg-black text-white shadow-lg' : 'text-gray-500 hover:bg-gray-50'}`}
+            className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all ${activeTab === 'inspections' ? 'bg-red-600 text-white shadow-lg' : 'text-gray-500 hover:bg-gray-50'}`}
           >
             <ClipboardList size={20} />
             <span className="text-sm font-medium">Inspeções</span>
           </button>
           <button 
             onClick={() => setActiveTab('techs')}
-            className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all ${activeTab === 'techs' ? 'bg-black text-white shadow-lg' : 'text-gray-500 hover:bg-gray-50'}`}
+            className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all ${activeTab === 'techs' ? 'bg-red-600 text-white shadow-lg' : 'text-gray-500 hover:bg-gray-50'}`}
           >
             <Users size={20} />
             <span className="text-sm font-medium">Técnicos</span>
           </button>
           <button 
             onClick={() => setActiveTab('types')}
-            className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all ${activeTab === 'types' ? 'bg-black text-white shadow-lg' : 'text-gray-500 hover:bg-gray-50'}`}
+            className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all ${activeTab === 'types' ? 'bg-red-600 text-white shadow-lg' : 'text-gray-500 hover:bg-gray-50'}`}
           >
             <FilePlus size={20} />
             <span className="text-sm font-medium">Tipos de Inspeção</span>
           </button>
           <button 
             onClick={() => setActiveTab('settings')}
-            className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all ${activeTab === 'settings' ? 'bg-black text-white shadow-lg' : 'text-gray-500 hover:bg-gray-50'}`}
+            className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all ${activeTab === 'settings' ? 'bg-red-600 text-white shadow-lg' : 'text-gray-500 hover:bg-gray-50'}`}
           >
             <Settings size={20} />
             <span className="text-sm font-medium">Configurações</span>
@@ -270,19 +270,30 @@ const AdminDashboard = ({ user, onLogout }: { user: User, onLogout: () => void }
         </div>
       </div>
 
+      {/* Mobile Header */}
+      <div className="md:hidden bg-white border-b border-gray-200 p-4 flex justify-between items-center sticky top-0 z-20">
+        <div className="flex items-center gap-2">
+          <HardHat className="w-6 h-6 text-red-600" />
+          <span className="font-bold text-lg tracking-tight">Inspetor EPI</span>
+        </div>
+        <button onClick={onLogout} className="p-2 text-red-500">
+          <LogOut size={20} />
+        </button>
+      </div>
+
       {/* Main Content */}
-      <main className="flex-1 p-8 overflow-y-auto">
+      <main className="flex-1 p-4 md:p-8 overflow-y-auto pb-24 md:pb-8">
         <AnimatePresence mode="wait">
           {activeTab === 'dashboard' && (
             <motion.div 
               key="dashboard"
-              initial={{ opacity: 0, x: 20 }}
-              animate={{ opacity: 1, x: 0 }}
-              exit={{ opacity: 0, x: -20 }}
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -10 }}
             >
-              <div className="mb-8">
-                <h2 className="text-3xl font-bold tracking-tight">Dashboard</h2>
-                <p className="text-gray-500 italic serif">Visão geral de performance e riscos</p>
+              <div className="mb-6 md:mb-8">
+                <h2 className="text-2xl md:text-3xl font-bold tracking-tight">Dashboard</h2>
+                <p className="text-gray-500 italic serif text-sm md:text-base">Visão geral de performance e riscos</p>
               </div>
               <DashboardView stats={stats} />
             </motion.div>
@@ -291,18 +302,18 @@ const AdminDashboard = ({ user, onLogout }: { user: User, onLogout: () => void }
           {activeTab === 'inspections' && (
             <motion.div 
               key="inspections"
-              initial={{ opacity: 0, x: 20 }}
-              animate={{ opacity: 1, x: 0 }}
-              exit={{ opacity: 0, x: -20 }}
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -10 }}
             >
-              <div className="flex justify-between items-end mb-8">
+              <div className="flex flex-col md:flex-row md:justify-between md:items-end gap-4 mb-6 md:mb-8">
                 <div>
-                  <h2 className="text-3xl font-bold tracking-tight">Inspeções</h2>
-                  <p className="text-gray-500 italic serif">Acompanhamento de vistorias em campo</p>
+                  <h2 className="text-2xl md:text-3xl font-bold tracking-tight">Inspeções</h2>
+                  <p className="text-gray-500 italic serif text-sm md:text-base">Acompanhamento de vistorias em campo</p>
                 </div>
                 <button 
                   onClick={() => setShowNewInspection(true)}
-                  className="bg-black text-white px-6 py-3 rounded-xl font-semibold flex items-center gap-2 hover:bg-zinc-800 transition-all shadow-lg"
+                  className="bg-red-600 text-white px-6 py-3 rounded-xl font-semibold flex items-center justify-center gap-2 hover:bg-red-700 transition-all shadow-lg shadow-red-100 w-full md:w-auto"
                 >
                   <Plus size={20} />
                   Nova Inspeção
@@ -310,46 +321,55 @@ const AdminDashboard = ({ user, onLogout }: { user: User, onLogout: () => void }
               </div>
 
               <div className="bg-white rounded-2xl border border-gray-200 overflow-hidden">
-                <div className="grid grid-cols-6 p-4 bg-gray-50 border-b border-gray-200 text-[10px] uppercase font-bold tracking-widest text-gray-400">
+                {/* Desktop Header */}
+                <div className="hidden md:grid grid-cols-6 p-4 bg-gray-50 border-b border-gray-200 text-[10px] uppercase font-bold tracking-widest text-gray-400">
                   <div className="col-span-2">Tipo / Local</div>
                   <div>Técnico</div>
                   <div>Data Agendada</div>
                   <div>Status</div>
                   <div className="text-right">Ações</div>
                 </div>
+                
                 {inspections.map(i => (
-                  <div key={i.id} className="grid grid-cols-6 p-4 border-b border-gray-100 items-center hover:bg-gray-50 transition-colors">
-                    <div className="col-span-2">
+                  <div key={i.id} className="flex flex-col md:grid md:grid-cols-6 p-4 border-b border-gray-100 md:items-center hover:bg-gray-50 transition-colors gap-4 md:gap-0">
+                    <div className="md:col-span-2">
                       <p className="font-semibold text-sm">{i.type_name}</p>
                       <div className="flex items-center gap-1 text-xs text-gray-400">
                         <MapPin size={12} />
                         {i.location}
                       </div>
                     </div>
-                    <div className="text-sm text-gray-600">{i.technician_name}</div>
-                    <div className="text-sm text-gray-600 font-mono">{i.scheduled_date}</div>
-                    <div>
+                    <div className="flex justify-between md:block">
+                      <span className="md:hidden text-[10px] font-bold uppercase text-gray-400">Técnico</span>
+                      <div className="text-sm text-gray-600">{i.technician_name}</div>
+                    </div>
+                    <div className="flex justify-between md:block">
+                      <span className="md:hidden text-[10px] font-bold uppercase text-gray-400">Data</span>
+                      <div className="text-sm text-gray-600 font-mono">{i.scheduled_date}</div>
+                    </div>
+                    <div className="flex justify-between md:block">
+                      <span className="md:hidden text-[10px] font-bold uppercase text-gray-400">Status</span>
                       <span className={`px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider ${
                         i.status === 'completed' ? 'bg-emerald-100 text-emerald-700' : 'bg-amber-100 text-amber-700'
                       }`}>
                         {i.status === 'completed' ? 'Concluída' : 'Pendente'}
                       </span>
                     </div>
-                    <div className="text-right flex justify-end gap-2">
+                    <div className="flex justify-end gap-2 border-t md:border-t-0 pt-3 md:pt-0">
                       {i.status === 'completed' ? (
                         <button 
                           onClick={() => handleViewReport(i.id)}
-                          className="text-black hover:underline text-xs font-bold"
+                          className="text-red-600 hover:underline text-xs font-bold px-2 py-1"
                         >
                           Ver Relatório
                         </button>
                       ) : (
                         <button 
                           onClick={() => setEditingInspection(i)}
-                          className="p-2 text-gray-400 hover:text-black transition-colors"
+                          className="p-2 text-gray-400 hover:text-red-600 transition-colors"
                           title="Editar Agendamento"
                         >
-                          <Edit size={14} />
+                          <Edit size={16} />
                         </button>
                       )}
                       <button 
@@ -357,7 +377,7 @@ const AdminDashboard = ({ user, onLogout }: { user: User, onLogout: () => void }
                         className="p-2 text-gray-400 hover:text-red-500 transition-colors"
                         title="Excluir Inspeção"
                       >
-                        <Trash2 size={14} />
+                        <Trash2 size={16} />
                       </button>
                     </div>
                   </div>
@@ -372,25 +392,25 @@ const AdminDashboard = ({ user, onLogout }: { user: User, onLogout: () => void }
           {activeTab === 'techs' && (
             <motion.div 
               key="techs"
-              initial={{ opacity: 0, x: 20 }}
-              animate={{ opacity: 1, x: 0 }}
-              exit={{ opacity: 0, x: -20 }}
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -10 }}
             >
-              <div className="flex justify-between items-end mb-8">
+              <div className="flex flex-col md:flex-row md:justify-between md:items-end gap-4 mb-6 md:mb-8">
                 <div>
-                  <h2 className="text-3xl font-bold tracking-tight">Técnicos</h2>
-                  <p className="text-gray-500 italic serif">Gerenciamento de equipe de campo</p>
+                  <h2 className="text-2xl md:text-3xl font-bold tracking-tight">Técnicos</h2>
+                  <p className="text-gray-500 italic serif text-sm md:text-base">Gerenciamento de equipe de campo</p>
                 </div>
                 <button 
                   onClick={() => setShowNewTech(true)}
-                  className="bg-black text-white px-6 py-3 rounded-xl font-semibold flex items-center gap-2 hover:bg-zinc-800 transition-all shadow-lg"
+                  className="bg-red-600 text-white px-6 py-3 rounded-xl font-semibold flex items-center justify-center gap-2 hover:bg-red-700 transition-all shadow-lg shadow-red-100 w-full md:w-auto"
                 >
                   <Plus size={20} />
                   Novo Técnico
                 </button>
               </div>
 
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
                 {techs.map(t => (
                   <div key={t.id} className="bg-white p-6 rounded-2xl border border-gray-200 shadow-sm hover:shadow-md transition-all">
                     <div className="flex items-center gap-4 mb-4">
@@ -406,17 +426,17 @@ const AdminDashboard = ({ user, onLogout }: { user: User, onLogout: () => void }
                       <div className="flex gap-2">
                         <button 
                           onClick={() => setEditingTech(t)}
-                          className="p-2 text-gray-400 hover:text-black transition-colors"
+                          className="p-2 text-gray-400 hover:text-red-600 transition-colors"
                           title="Editar Técnico"
                         >
-                          <Edit size={14} />
+                          <Edit size={16} />
                         </button>
                         <button 
                           onClick={() => handleDeleteTech(t.id)}
                           className="p-2 text-gray-400 hover:text-red-500 transition-colors"
                           title="Excluir Técnico"
                         >
-                          <Trash2 size={14} />
+                          <Trash2 size={16} />
                         </button>
                       </div>
                       <div className="flex items-center gap-2">
@@ -433,25 +453,25 @@ const AdminDashboard = ({ user, onLogout }: { user: User, onLogout: () => void }
           {activeTab === 'types' && (
             <motion.div 
               key="types"
-              initial={{ opacity: 0, x: 20 }}
-              animate={{ opacity: 1, x: 0 }}
-              exit={{ opacity: 0, x: -20 }}
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -10 }}
             >
-              <div className="flex justify-between items-end mb-8">
+              <div className="flex flex-col md:flex-row md:justify-between md:items-end gap-4 mb-6 md:mb-8">
                 <div>
-                  <h2 className="text-3xl font-bold tracking-tight">Tipos de Inspeção</h2>
-                  <p className="text-gray-500 italic serif">Definição de formulários via IA</p>
+                  <h2 className="text-2xl md:text-3xl font-bold tracking-tight">Tipos de Inspeção</h2>
+                  <p className="text-gray-500 italic serif text-sm md:text-base">Definição de formulários via IA</p>
                 </div>
                 <button 
                   onClick={() => setShowNewType(true)}
-                  className="bg-black text-white px-6 py-3 rounded-xl font-semibold flex items-center gap-2 hover:bg-zinc-800 transition-all shadow-lg"
+                  className="bg-red-600 text-white px-6 py-3 rounded-xl font-semibold flex items-center justify-center gap-2 hover:bg-red-700 transition-all shadow-lg shadow-red-100 w-full md:w-auto"
                 >
                   <Upload size={20} />
                   Importar Formulário
                 </button>
               </div>
 
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
                 {types.map(t => (
                   <div key={t.id} className="bg-white p-6 rounded-2xl border border-gray-200 shadow-sm">
                     <div className="flex items-start justify-between mb-4">
@@ -464,17 +484,17 @@ const AdminDashboard = ({ user, onLogout }: { user: User, onLogout: () => void }
                       <div className="flex items-center gap-1">
                         <button 
                           onClick={() => setEditingType(t)}
-                          className="p-2 text-gray-400 hover:text-black transition-colors"
+                          className="p-2 text-gray-400 hover:text-red-600 transition-colors"
                           title="Editar Tipo"
                         >
-                          <Edit size={14} />
+                          <Edit size={16} />
                         </button>
                         <button 
                           onClick={() => handleDeleteType(t.id)}
                           className="p-2 text-gray-400 hover:text-red-500 transition-colors"
                           title="Excluir Tipo"
                         >
-                          <Trash2 size={14} />
+                          <Trash2 size={16} />
                         </button>
                         <span className="text-[10px] font-bold bg-gray-100 px-2 py-1 rounded uppercase tracking-widest ml-2">
                           {t.schema.length} campos
@@ -499,19 +519,43 @@ const AdminDashboard = ({ user, onLogout }: { user: User, onLogout: () => void }
           {activeTab === 'settings' && (
             <motion.div 
               key="settings"
-              initial={{ opacity: 0, x: 20 }}
-              animate={{ opacity: 1, x: 0 }}
-              exit={{ opacity: 0, x: -20 }}
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -10 }}
             >
-              <div className="mb-8">
-                <h2 className="text-3xl font-bold tracking-tight">Configurações</h2>
-                <p className="text-gray-500 italic serif">Gerenciamento de integrações e sistema</p>
+              <div className="mb-6 md:mb-8">
+                <h2 className="text-2xl md:text-3xl font-bold tracking-tight">Configurações</h2>
+                <p className="text-gray-500 italic serif text-sm md:text-base">Gerenciamento de integrações e sistema</p>
               </div>
               <SettingsView />
             </motion.div>
           )}
         </AnimatePresence>
       </main>
+
+      {/* Bottom Navigation - Mobile */}
+      <div className="md:hidden fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 px-4 py-2 flex justify-between items-center z-30">
+        <button onClick={() => setActiveTab('dashboard')} className={`flex flex-col items-center gap-1 p-2 ${activeTab === 'dashboard' ? 'text-red-600' : 'text-gray-400'}`}>
+          <LayoutDashboard size={20} />
+          <span className="text-[10px] font-bold uppercase">Início</span>
+        </button>
+        <button onClick={() => setActiveTab('inspections')} className={`flex flex-col items-center gap-1 p-2 ${activeTab === 'inspections' ? 'text-red-600' : 'text-gray-400'}`}>
+          <ClipboardList size={20} />
+          <span className="text-[10px] font-bold uppercase">Inspeções</span>
+        </button>
+        <button onClick={() => setActiveTab('techs')} className={`flex flex-col items-center gap-1 p-2 ${activeTab === 'techs' ? 'text-red-600' : 'text-gray-400'}`}>
+          <Users size={20} />
+          <span className="text-[10px] font-bold uppercase">Equipe</span>
+        </button>
+        <button onClick={() => setActiveTab('types')} className={`flex flex-col items-center gap-1 p-2 ${activeTab === 'types' ? 'text-red-600' : 'text-gray-400'}`}>
+          <FilePlus size={20} />
+          <span className="text-[10px] font-bold uppercase">Tipos</span>
+        </button>
+        <button onClick={() => setActiveTab('settings')} className={`flex flex-col items-center gap-1 p-2 ${activeTab === 'settings' ? 'text-red-600' : 'text-gray-400'}`}>
+          <Settings size={20} />
+          <span className="text-[10px] font-bold uppercase">Config</span>
+        </button>
+      </div>
 
       {/* Modals */}
       <AnimatePresence>
@@ -573,16 +617,16 @@ const TechnicianDashboard = ({ user, onLogout }: { user: User, onLogout: () => v
 
   return (
     <div className="min-h-screen bg-[#F5F5F5]">
-      <header className="bg-white border-b border-gray-200 p-6 sticky top-0 z-10">
+      <header className="bg-white border-b border-gray-200 p-4 md:p-6 sticky top-0 z-10">
         <div className="max-w-4xl mx-auto flex justify-between items-center">
-          <div className="flex items-center gap-3">
-            <Shield className="w-8 h-8" />
+          <div className="flex items-center gap-2 md:gap-3">
+            <HardHat className="w-6 h-6 md:w-8 md:h-8 text-red-600" />
             <div>
-              <h1 className="font-bold text-xl tracking-tight">SafeInspect</h1>
-              <p className="text-[10px] font-bold uppercase tracking-widest text-gray-400">Área do Técnico</p>
+              <h1 className="font-bold text-lg md:text-xl tracking-tight">Inspetor EPI</h1>
+              <p className="text-[8px] md:text-[10px] font-bold uppercase tracking-widest text-gray-400">Área do Técnico</p>
             </div>
           </div>
-          <div className="flex items-center gap-4">
+          <div className="flex items-center gap-2 md:gap-4">
             <div className="text-right hidden sm:block">
               <p className="text-sm font-bold">{user.name}</p>
               <p className="text-[10px] text-gray-400">{user.whatsapp}</p>
@@ -594,10 +638,10 @@ const TechnicianDashboard = ({ user, onLogout }: { user: User, onLogout: () => v
         </div>
       </header>
 
-      <main className="max-w-4xl mx-auto p-6">
-        <div className="mb-8">
-          <h2 className="text-2xl font-bold mb-2">Minhas Inspeções</h2>
-          <p className="text-gray-500 italic serif">Vistorias pendentes aguardando preenchimento</p>
+      <main className="max-w-4xl mx-auto p-4 md:p-6">
+        <div className="mb-6 md:mb-8">
+          <h2 className="text-xl md:text-2xl font-bold mb-1 md:mb-2">Minhas Inspeções</h2>
+          <p className="text-gray-500 italic serif text-sm md:text-base">Vistorias pendentes aguardando preenchimento</p>
         </div>
 
         {loading ? (
@@ -615,8 +659,8 @@ const TechnicianDashboard = ({ user, onLogout }: { user: User, onLogout: () => v
                 className="w-full bg-white p-6 rounded-2xl border border-gray-200 shadow-sm hover:shadow-md transition-all flex items-center justify-between text-left group"
               >
                 <div className="flex items-center gap-6">
-                  <div className="w-14 h-14 rounded-2xl bg-gray-50 flex items-center justify-center text-gray-400 group-hover:bg-black group-hover:text-white transition-all">
-                    <ClipboardList size={24} />
+                  <div className="w-14 h-14 rounded-2xl bg-gray-50 flex items-center justify-center text-gray-400 group-hover:bg-red-600 group-hover:text-white transition-all">
+                    <HardHat size={24} />
                   </div>
                   <div>
                     <h3 className="font-bold text-lg">{i.type_name}</h3>
@@ -665,20 +709,20 @@ const TechnicianDashboard = ({ user, onLogout }: { user: User, onLogout: () => v
 // --- Helper Components ---
 
 const Modal = ({ title, children, onClose, wide = false }: { title: string, children: React.ReactNode, onClose: () => void, wide?: boolean }) => (
-  <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/40 backdrop-blur-sm">
+  <div className="fixed inset-0 z-50 flex items-end md:items-center justify-center p-0 md:p-4 bg-black/40 backdrop-blur-sm">
     <motion.div 
-      initial={{ opacity: 0, scale: 0.95 }}
-      animate={{ opacity: 1, scale: 1 }}
-      exit={{ opacity: 0, scale: 0.95 }}
-      className={`bg-white rounded-3xl shadow-2xl overflow-hidden flex flex-col max-h-[90vh] ${wide ? 'w-full max-w-4xl' : 'w-full max-w-lg'}`}
+      initial={{ opacity: 0, y: 100 }}
+      animate={{ opacity: 1, y: 0 }}
+      exit={{ opacity: 0, y: 100 }}
+      className={`bg-white rounded-t-3xl md:rounded-3xl shadow-2xl overflow-hidden flex flex-col h-[95vh] md:h-auto md:max-h-[90vh] ${wide ? 'w-full max-w-4xl' : 'w-full max-w-lg'}`}
     >
-      <div className="p-6 border-b border-gray-100 flex justify-between items-center bg-gray-50">
-        <h3 className="font-bold text-xl tracking-tight">{title}</h3>
+      <div className="p-4 md:p-6 border-b border-gray-100 flex justify-between items-center bg-gray-50">
+        <h3 className="font-bold text-lg md:text-xl tracking-tight">{title}</h3>
         <button onClick={onClose} className="p-2 hover:bg-gray-200 rounded-full transition-colors">
           <X size={20} />
         </button>
       </div>
-      <div className="p-6 overflow-y-auto flex-1">
+      <div className="p-4 md:p-6 overflow-y-auto flex-1 pb-20 md:pb-6">
         {children}
       </div>
     </motion.div>
@@ -720,7 +764,7 @@ const NewTechForm = ({ onComplete, initialData }: { onComplete: () => void, init
         <label className="block text-[10px] font-bold uppercase tracking-widest text-gray-400 mb-1">Senha de Acesso {initialData && '(deixe em branco para manter)'}</label>
         <input required={!initialData} type="password" value={password} onChange={e => setPassword(e.target.value)} className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-black/5 outline-none" />
       </div>
-      <button disabled={loading} className="w-full bg-black text-white py-4 rounded-xl font-bold hover:bg-zinc-800 transition-all flex items-center justify-center gap-2">
+      <button disabled={loading} className="w-full bg-red-600 text-white py-4 rounded-xl font-bold hover:bg-red-700 transition-all flex items-center justify-center gap-2">
         {loading ? <Loader2 className="animate-spin" /> : initialData ? 'Salvar Alterações' : 'Cadastrar Técnico'}
       </button>
     </form>
@@ -893,15 +937,15 @@ const NewTypeForm = ({ onComplete, initialData }: { onComplete: () => void, init
         )}
       </div>
 
-      <div className="p-4 bg-amber-50 rounded-xl border border-amber-100 flex gap-3">
-        <div className="w-8 h-8 rounded-full bg-amber-200 flex items-center justify-center shrink-0">
-          <Shield className="text-amber-700 w-4 h-4" />
+      <div className="p-4 bg-red-50 rounded-xl border border-red-100 flex gap-3">
+        <div className="w-8 h-8 rounded-full bg-red-100 flex items-center justify-center shrink-0">
+          <HardHat className="text-red-600 w-4 h-4" />
         </div>
-        <p className="text-[10px] text-amber-800 leading-relaxed">
+        <p className="text-[10px] text-red-800 leading-relaxed">
           {initialData ? 'Se você fornecer um novo arquivo ou texto, a IA irá gerar um novo formulário substituindo o atual.' : 'Nossa IA irá analisar o arquivo ou texto fornecido e criar automaticamente os campos do formulário digital.'}
         </p>
       </div>
-      <button disabled={loading} className="w-full bg-black text-white py-4 rounded-xl font-bold hover:bg-zinc-800 transition-all flex items-center justify-center gap-2">
+      <button disabled={loading} className="w-full bg-red-600 text-white py-4 rounded-xl font-bold hover:bg-red-700 transition-all flex items-center justify-center gap-2">
         {loading ? <Loader2 className="animate-spin" /> : initialData ? 'Salvar Alterações' : 'Gerar Formulário Digital'}
       </button>
     </form>
@@ -970,7 +1014,7 @@ const NewInspectionForm = ({ techs, types, onComplete, initialData }: { techs: U
           </select>
         </div>
       )}
-      <button disabled={loading} className="w-full bg-black text-white py-4 rounded-xl font-bold hover:bg-zinc-800 transition-all flex items-center justify-center gap-2">
+      <button disabled={loading} className="w-full bg-red-600 text-white py-4 rounded-xl font-bold hover:bg-red-700 transition-all flex items-center justify-center gap-2">
         {loading ? <Loader2 className="animate-spin" /> : initialData ? 'Salvar Alterações' : 'Agendar Inspeção'}
       </button>
     </form>
@@ -1009,21 +1053,21 @@ const InspectionForm = ({ inspection, onClose, onComplete }: { inspection: Inspe
   };
 
   return (
-    <div className="min-h-screen flex flex-col">
-      <header className="bg-white border-b border-gray-200 p-4 sticky top-0 z-20 flex justify-between items-center">
-        <div className="flex items-center gap-3">
+    <div className="min-h-screen flex flex-col bg-[#F5F5F5]">
+      <header className="bg-white border-b border-gray-200 p-3 md:p-4 sticky top-0 z-20 flex justify-between items-center">
+        <div className="flex items-center gap-2 md:gap-3">
           <button onClick={onClose} className="p-2 hover:bg-gray-100 rounded-full transition-colors">
             <X size={20} />
           </button>
-          <div>
-            <h2 className="font-bold text-lg leading-tight">{inspection.type_name}</h2>
-            <p className="text-[10px] text-gray-400 uppercase tracking-widest">{inspection.location}</p>
+          <div className="overflow-hidden">
+            <h2 className="font-bold text-base md:text-lg leading-tight truncate">{inspection.type_name}</h2>
+            <p className="text-[8px] md:text-[10px] text-gray-400 uppercase tracking-widest truncate">{inspection.location}</p>
           </div>
         </div>
         <button 
           onClick={handleSubmit}
           disabled={loading}
-          className="bg-emerald-600 text-white px-6 py-2 rounded-xl font-bold hover:bg-emerald-700 transition-all flex items-center gap-2 shadow-lg shadow-emerald-100"
+          className="bg-emerald-600 text-white px-4 md:px-6 py-2 rounded-xl font-bold hover:bg-emerald-700 transition-all flex items-center gap-2 shadow-lg shadow-emerald-100 text-sm md:text-base"
         >
           {loading ? <Loader2 className="animate-spin" /> : <><CheckCircle size={18} /> Finalizar</>}
         </button>
@@ -1058,7 +1102,7 @@ const InspectionForm = ({ inspection, onClose, onComplete }: { inspection: Inspe
                           onChange={e => setFormData(p => ({ ...p, [field.label]: e.target.value }))}
                           className="hidden peer" 
                         />
-                        <div className="text-center py-3 rounded-xl border border-gray-200 peer-checked:bg-black peer-checked:text-white peer-checked:border-black transition-all cursor-pointer text-sm font-medium">
+                        <div className="text-center py-3 rounded-xl border border-gray-200 peer-checked:bg-red-600 peer-checked:text-white peer-checked:border-red-600 transition-all cursor-pointer text-sm font-medium">
                           {opt}
                         </div>
                       </label>
@@ -1097,7 +1141,7 @@ const InspectionForm = ({ inspection, onClose, onComplete }: { inspection: Inspe
             ))}
             <button 
               onClick={() => fileInputRef.current?.click()}
-              className="aspect-square rounded-2xl border-2 border-dashed border-gray-200 flex flex-col items-center justify-center gap-2 text-gray-400 hover:border-black hover:text-black transition-all"
+              className="aspect-square rounded-2xl border-2 border-dashed border-gray-200 flex flex-col items-center justify-center gap-2 text-gray-400 hover:border-red-600 hover:text-red-600 transition-all"
             >
               <Camera size={24} />
               <span className="text-[10px] font-bold uppercase tracking-widest">Adicionar Foto</span>
@@ -1121,7 +1165,7 @@ const InspectionForm = ({ inspection, onClose, onComplete }: { inspection: Inspe
 const DashboardView = ({ stats }: { stats: any }) => {
   if (!stats) return <div className="flex justify-center p-12"><Loader2 className="animate-spin" /></div>;
 
-  const COLORS = ['#10b981', '#f59e0b', '#ef4444', '#3b82f6'];
+  const COLORS = ['#DC2626', '#EF4444', '#F87171', '#FCA5A5'];
 
   const pieData = [
     { name: 'Concluídas', value: stats.completed },
@@ -1129,47 +1173,47 @@ const DashboardView = ({ stats }: { stats: any }) => {
   ];
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-6 md:space-y-8">
       {/* Quick Stats */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-        <div className="bg-white p-6 rounded-3xl border border-gray-100 shadow-sm">
-          <div className="w-10 h-10 bg-blue-50 rounded-xl flex items-center justify-center mb-4">
-            <ClipboardList className="text-blue-600" size={20} />
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
+        <div className="bg-white p-4 md:p-6 rounded-2xl md:rounded-3xl border border-gray-100 shadow-sm">
+          <div className="w-8 h-8 md:w-10 md:h-10 bg-red-50 rounded-xl flex items-center justify-center mb-3 md:mb-4">
+            <ClipboardList className="text-red-600" size={18} />
           </div>
-          <p className="text-2xl font-bold">{stats.total}</p>
-          <p className="text-xs text-gray-400 uppercase font-bold tracking-widest">Total Inspeções</p>
+          <p className="text-xl md:text-2xl font-bold">{stats.total}</p>
+          <p className="text-[10px] text-gray-400 uppercase font-bold tracking-widest">Total Inspeções</p>
         </div>
-        <div className="bg-white p-6 rounded-3xl border border-gray-100 shadow-sm">
-          <div className="w-10 h-10 bg-emerald-50 rounded-xl flex items-center justify-center mb-4">
-            <CheckCircle className="text-emerald-600" size={20} />
+        <div className="bg-white p-4 md:p-6 rounded-2xl md:rounded-3xl border border-gray-100 shadow-sm">
+          <div className="w-8 h-8 md:w-10 md:h-10 bg-emerald-50 rounded-xl flex items-center justify-center mb-3 md:mb-4">
+            <CheckCircle className="text-emerald-600" size={18} />
           </div>
-          <p className="text-2xl font-bold">{stats.completed}</p>
-          <p className="text-xs text-gray-400 uppercase font-bold tracking-widest">Concluídas</p>
+          <p className="text-xl md:text-2xl font-bold">{stats.completed}</p>
+          <p className="text-[10px] text-gray-400 uppercase font-bold tracking-widest">Concluídas</p>
         </div>
-        <div className="bg-white p-6 rounded-3xl border border-gray-100 shadow-sm">
-          <div className="w-10 h-10 bg-amber-50 rounded-xl flex items-center justify-center mb-4">
-            <Clock className="text-amber-600" size={20} />
+        <div className="bg-white p-4 md:p-6 rounded-2xl md:rounded-3xl border border-gray-100 shadow-sm">
+          <div className="w-8 h-8 md:w-10 md:h-10 bg-amber-50 rounded-xl flex items-center justify-center mb-3 md:mb-4">
+            <Clock className="text-amber-600" size={18} />
           </div>
-          <p className="text-2xl font-bold">{stats.pending}</p>
-          <p className="text-xs text-gray-400 uppercase font-bold tracking-widest">Pendentes</p>
+          <p className="text-xl md:text-2xl font-bold">{stats.pending}</p>
+          <p className="text-[10px] text-gray-400 uppercase font-bold tracking-widest">Pendentes</p>
         </div>
-        <div className="bg-white p-6 rounded-3xl border border-gray-100 shadow-sm">
-          <div className="w-10 h-10 bg-red-50 rounded-xl flex items-center justify-center mb-4">
-            <AlertTriangle className="text-red-600" size={20} />
+        <div className="bg-white p-4 md:p-6 rounded-2xl md:rounded-3xl border border-gray-100 shadow-sm">
+          <div className="w-8 h-8 md:w-10 md:h-10 bg-red-50 rounded-xl flex items-center justify-center mb-3 md:mb-4">
+            <AlertTriangle className="text-red-600" size={18} />
           </div>
-          <p className="text-2xl font-bold">{stats.risksFound}</p>
-          <p className="text-xs text-gray-400 uppercase font-bold tracking-widest">Riscos Detectados</p>
+          <p className="text-xl md:text-2xl font-bold">{stats.risksFound}</p>
+          <p className="text-[10px] text-gray-400 uppercase font-bold tracking-widest">Riscos Detectados</p>
         </div>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 md:gap-8">
         {/* Chart: Inspections by Type */}
-        <div className="bg-white p-8 rounded-3xl border border-gray-100 shadow-sm">
-          <h3 className="font-bold text-lg mb-6 flex items-center gap-2">
+        <div className="bg-white p-6 md:p-8 rounded-2xl md:rounded-3xl border border-gray-100 shadow-sm">
+          <h3 className="font-bold text-base md:text-lg mb-6 flex items-center gap-2">
             <BarChart3 size={20} className="text-gray-400" />
             Inspeções por Tipo
           </h3>
-          <div className="h-[300px]">
+          <div className="h-[250px] md:h-[300px]">
             <ResponsiveContainer width="100%" height="100%">
               <BarChart data={stats.byType}>
                 <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f3f4f6" />
@@ -1179,27 +1223,27 @@ const DashboardView = ({ stats }: { stats: any }) => {
                   contentStyle={{ borderRadius: '12px', border: 'none', boxShadow: '0 10px 15px -3px rgb(0 0 0 / 0.1)' }}
                   cursor={{ fill: '#f9fafb' }}
                 />
-                <Bar dataKey="count" fill="#000000" radius={[4, 4, 0, 0]} />
+                <Bar dataKey="count" fill="#DC2626" radius={[4, 4, 0, 0]} />
               </BarChart>
             </ResponsiveContainer>
           </div>
         </div>
 
         {/* Chart: Status Distribution */}
-        <div className="bg-white p-8 rounded-3xl border border-gray-100 shadow-sm">
-          <h3 className="font-bold text-lg mb-6 flex items-center gap-2">
+        <div className="bg-white p-6 md:p-8 rounded-2xl md:rounded-3xl border border-gray-100 shadow-sm">
+          <h3 className="font-bold text-base md:text-lg mb-6 flex items-center gap-2">
             <CheckCircle size={20} className="text-gray-400" />
             Distribuição de Status
           </h3>
-          <div className="h-[300px] flex items-center justify-center">
+          <div className="h-[250px] md:h-[300px] flex items-center justify-center">
             <ResponsiveContainer width="100%" height="100%">
               <PieChart>
                 <Pie
                   data={pieData}
                   cx="50%"
                   cy="50%"
-                  innerRadius={60}
-                  outerRadius={100}
+                  innerRadius={50}
+                  outerRadius={80}
                   paddingAngle={5}
                   dataKey="value"
                 >
@@ -1211,11 +1255,11 @@ const DashboardView = ({ stats }: { stats: any }) => {
               </PieChart>
             </ResponsiveContainer>
           </div>
-          <div className="flex justify-center gap-8 mt-4">
+          <div className="flex justify-center gap-6 mt-4">
             {pieData.map((entry, index) => (
               <div key={entry.name} className="flex items-center gap-2">
                 <div className="w-3 h-3 rounded-full" style={{ backgroundColor: COLORS[index % COLORS.length] }} />
-                <span className="text-xs text-gray-500 font-medium">{entry.name}</span>
+                <span className="text-[10px] text-gray-500 font-medium uppercase tracking-widest">{entry.name}</span>
               </div>
             ))}
           </div>
@@ -1223,22 +1267,22 @@ const DashboardView = ({ stats }: { stats: any }) => {
       </div>
 
       {/* Performance by Technician */}
-      <div className="bg-white p-8 rounded-3xl border border-gray-100 shadow-sm">
-        <h3 className="font-bold text-lg mb-6 flex items-center gap-2">
+      <div className="bg-white p-6 md:p-8 rounded-2xl md:rounded-3xl border border-gray-100 shadow-sm">
+        <h3 className="font-bold text-base md:text-lg mb-6 flex items-center gap-2">
           <Users size={20} className="text-gray-400" />
           Performance por Técnico
         </h3>
-        <div className="h-[300px]">
+        <div className="h-[250px] md:h-[300px]">
           <ResponsiveContainer width="100%" height="100%">
             <BarChart data={stats.byTech} layout="vertical">
               <CartesianGrid strokeDasharray="3 3" horizontal={true} vertical={false} stroke="#f3f4f6" />
               <XAxis type="number" axisLine={false} tickLine={false} tick={{ fontSize: 10, fill: '#9ca3af' }} />
-              <YAxis dataKey="name" type="category" axisLine={false} tickLine={false} tick={{ fontSize: 10, fill: '#9ca3af' }} width={100} />
+              <YAxis dataKey="name" type="category" axisLine={false} tickLine={false} tick={{ fontSize: 10, fill: '#9ca3af' }} width={80} />
               <Tooltip 
                 contentStyle={{ borderRadius: '12px', border: 'none', boxShadow: '0 10px 15px -3px rgb(0 0 0 / 0.1)' }}
                 cursor={{ fill: '#f9fafb' }}
               />
-              <Bar dataKey="count" fill="#3b82f6" radius={[0, 4, 4, 0]} />
+              <Bar dataKey="count" fill="#EF4444" radius={[0, 4, 4, 0]} />
             </BarChart>
           </ResponsiveContainer>
         </div>
@@ -1291,14 +1335,14 @@ const SettingsView = () => {
   if (loading) return <div className="flex justify-center p-12"><Loader2 className="animate-spin" /></div>;
 
   return (
-    <div className="max-w-2xl bg-white p-8 rounded-3xl border border-gray-200 shadow-sm">
+    <div className="max-w-2xl bg-white p-6 md:p-8 rounded-2xl md:rounded-3xl border border-gray-200 shadow-sm">
       <div className="flex items-center gap-3 mb-8">
-        <div className="w-12 h-12 bg-emerald-50 rounded-2xl flex items-center justify-center">
-          <Shield className="text-emerald-600" size={24} />
+        <div className="w-10 h-10 md:w-12 md:h-12 bg-red-50 rounded-xl flex items-center justify-center shrink-0">
+          <HardHat className="text-red-600" size={24} />
         </div>
         <div>
-          <h3 className="font-bold text-xl">Integração Evolution API</h3>
-          <p className="text-xs text-gray-400">Configure as credenciais para notificações via WhatsApp</p>
+          <h3 className="font-bold text-lg md:text-xl">Integração Evolution API</h3>
+          <p className="text-[10px] md:text-xs text-gray-400">Configure as credenciais para notificações via WhatsApp</p>
         </div>
       </div>
 
@@ -1310,7 +1354,7 @@ const SettingsView = () => {
             placeholder="https://api.sua-evolution.com"
             value={settings.evolution_url} 
             onChange={e => setSettings(p => ({ ...p, evolution_url: e.target.value }))}
-            className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-black/5 outline-none" 
+            className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-red-600/5 outline-none text-base" 
           />
         </div>
         <div>
@@ -1320,29 +1364,29 @@ const SettingsView = () => {
             placeholder="Sua API Key"
             value={settings.evolution_key} 
             onChange={e => setSettings(p => ({ ...p, evolution_key: e.target.value }))}
-            className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-black/5 outline-none" 
+            className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-red-600/5 outline-none text-base" 
           />
         </div>
         <div>
           <label className="block text-[10px] font-bold uppercase tracking-widest text-gray-400 mb-1">Nome da Instância</label>
           <input 
             type="text" 
-            placeholder="SafeInspect"
+            placeholder="Inspetor EPI"
             value={settings.evolution_instance} 
             onChange={e => setSettings(p => ({ ...p, evolution_instance: e.target.value }))}
-            className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-black/5 outline-none" 
+            className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-red-600/5 outline-none text-base" 
           />
         </div>
 
         {message && (
-          <p className={`text-sm font-medium ${message.includes('sucesso') ? 'text-emerald-600' : 'text-red-500'}`}>
+          <p className={`text-xs font-bold text-center p-3 rounded-xl ${message.includes('sucesso') ? 'bg-emerald-50 text-emerald-600' : 'bg-red-50 text-red-600'}`}>
             {message}
           </p>
         )}
 
         <button 
           disabled={saving}
-          className="w-full bg-black text-white py-4 rounded-xl font-bold hover:bg-zinc-800 transition-all flex items-center justify-center gap-2"
+          className="w-full bg-red-600 text-white py-4 rounded-xl font-bold hover:bg-red-700 transition-all flex items-center justify-center gap-2 shadow-lg shadow-red-100"
         >
           {saving ? <Loader2 className="animate-spin" /> : 'Salvar Configurações'}
         </button>
@@ -1423,65 +1467,67 @@ const ReportView = ({ report }: { report: InspectionReport }) => {
 
   return (
     <div className="space-y-8">
-      <div className="flex justify-end gap-3">
+      <div className="flex flex-col md:flex-row md:justify-end gap-3">
         <button 
           onClick={exportPDF}
-          className="bg-white border border-gray-200 text-gray-600 px-4 py-2 rounded-xl text-xs font-bold hover:bg-gray-50 transition-all flex items-center gap-2"
+          className="w-full md:w-auto bg-white border border-gray-200 text-gray-600 px-4 py-3 rounded-xl text-xs font-bold hover:bg-gray-50 transition-all flex items-center justify-center gap-2"
         >
           <Download size={14} /> Baixar PDF
         </button>
       </div>
 
-      <div ref={reportRef} className="p-8 bg-white rounded-3xl border border-gray-100">
-        <div className="flex justify-between items-start mb-12">
-          <div>
-            <div className="w-12 h-12 bg-black rounded-2xl flex items-center justify-center mb-4">
-              <Shield className="text-white" size={24} />
+      <div ref={reportRef} className="p-4 md:p-8 bg-white rounded-2xl md:rounded-3xl border border-gray-100">
+        <div className="flex flex-col md:flex-row justify-between items-start gap-6 mb-8 md:mb-12">
+          <div className="flex items-center gap-4">
+            <div className="w-12 h-12 bg-red-600 rounded-2xl flex items-center justify-center shrink-0">
+              <HardHat className="text-white" size={24} />
             </div>
-            <h2 className="text-2xl font-bold tracking-tight">{report.type_name}</h2>
-            <p className="text-gray-400 text-xs uppercase tracking-widest font-bold">Relatório de Inspeção #{report.id}</p>
+            <div>
+              <h2 className="text-xl md:text-2xl font-bold tracking-tight">{report.type_name}</h2>
+              <p className="text-gray-400 text-[10px] uppercase tracking-widest font-bold">Relatório #{report.id}</p>
+            </div>
           </div>
-          <div className="text-right">
+          <div className="w-full md:w-auto text-left md:text-right">
             <p className="text-[10px] font-bold uppercase tracking-widest text-gray-400 mb-1">Status</p>
             <span className="px-3 py-1 bg-emerald-100 text-emerald-700 rounded-full text-[10px] font-bold">CONCLUÍDA</span>
           </div>
         </div>
 
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-6 mb-12">
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6 mb-8 md:mb-12">
           <div className="p-4 bg-gray-50 rounded-2xl">
             <p className="text-[10px] font-bold uppercase tracking-widest text-gray-400 mb-1">Técnico</p>
-            <p className="font-bold text-sm">{report.technician_name}</p>
+            <p className="font-bold text-xs md:text-sm truncate">{report.technician_name}</p>
           </div>
           <div className="p-4 bg-gray-50 rounded-2xl">
-            <p className="text-[10px] font-bold uppercase tracking-widest text-gray-400 mb-1">Data Submissão</p>
-            <p className="font-bold text-sm font-mono">{new Date(report.submitted_at!).toLocaleString()}</p>
+            <p className="text-[10px] font-bold uppercase tracking-widest text-gray-400 mb-1">Data</p>
+            <p className="font-bold text-xs md:text-sm font-mono">{new Date(report.submitted_at!).toLocaleDateString()}</p>
           </div>
           <div className="p-4 bg-gray-50 rounded-2xl">
             <p className="text-[10px] font-bold uppercase tracking-widest text-gray-400 mb-1">Local</p>
-            <p className="font-bold text-sm">{report.location}</p>
+            <p className="font-bold text-xs md:text-sm truncate">{report.location}</p>
           </div>
           <div className="p-4 bg-gray-50 rounded-2xl">
-            <p className="text-[10px] font-bold uppercase tracking-widest text-gray-400 mb-1">ID Inspeção</p>
-            <p className="font-bold text-sm font-mono">#{report.id}</p>
+            <p className="text-[10px] font-bold uppercase tracking-widest text-gray-400 mb-1">ID</p>
+            <p className="font-bold text-xs md:text-sm font-mono">#{report.id}</p>
           </div>
         </div>
 
         <div className="space-y-8">
           <div className="space-y-4">
             <div className="flex justify-between items-center border-b pb-2">
-              <h4 className="text-xs font-bold uppercase tracking-widest text-gray-400">Análise Técnica (IA)</h4>
+              <h4 className="text-[10px] font-bold uppercase tracking-widest text-gray-400">Análise Técnica (IA)</h4>
               {!analysis && (
                 <button 
                   onClick={generateAnalysis}
                   disabled={loading}
-                  className="text-[10px] font-bold bg-black text-white px-3 py-1 rounded-full hover:bg-zinc-800 transition-all flex items-center gap-1"
+                  className="text-[10px] font-bold bg-red-600 text-white px-3 py-1 rounded-full hover:bg-red-700 transition-all flex items-center gap-1"
                 >
-                  {loading ? <Loader2 className="animate-spin w-3 h-3" /> : <><Shield size={12} /> Gerar Análise</>}
+                  {loading ? <Loader2 className="animate-spin w-3 h-3" /> : <><HardHat size={12} /> Gerar Análise</>}
                 </button>
               )}
             </div>
             {analysis ? (
-              <div className="p-6 bg-emerald-50 rounded-2xl border border-emerald-100">
+              <div className="p-4 md:p-6 bg-emerald-50 rounded-2xl border border-emerald-100">
                 <p className="text-sm text-emerald-900 leading-relaxed whitespace-pre-wrap italic serif">
                   "{analysis}"
                 </p>
@@ -1494,7 +1540,7 @@ const ReportView = ({ report }: { report: InspectionReport }) => {
           </div>
 
           <div className="space-y-4">
-            <h4 className="text-xs font-bold uppercase tracking-widest text-gray-400 border-b pb-2">Dados Coletados</h4>
+            <h4 className="text-[10px] font-bold uppercase tracking-widest text-gray-400 border-b pb-2">Dados Coletados</h4>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-4">
               {Object.entries(report.data).map(([label, value]) => (
                 <div key={label} className="flex justify-between items-center py-2 border-b border-gray-50">
@@ -1508,10 +1554,10 @@ const ReportView = ({ report }: { report: InspectionReport }) => {
           </div>
 
           <div className="space-y-4">
-            <h4 className="text-xs font-bold uppercase tracking-widest text-gray-400 border-b pb-2">Fotos da Inspeção</h4>
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+            <h4 className="text-[10px] font-bold uppercase tracking-widest text-gray-400 border-b pb-2">Evidências</h4>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               {report.photos.map((photo, idx) => (
-                <div key={idx} className="aspect-square rounded-2xl overflow-hidden border border-gray-100">
+                <div key={idx} className="aspect-video rounded-2xl overflow-hidden border border-gray-100">
                   <img src={photo} className="w-full h-full object-cover" />
                 </div>
               ))}
