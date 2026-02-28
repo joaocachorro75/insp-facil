@@ -106,12 +106,17 @@ async function startServer() {
   const app = express();
   const PORT = 3000;
 
-  app.use(express.json({ limit: '50mb' }));
-
-  // Health Check for Easypanel/Docker
+  // 1. Health Check - MUST BE FIRST for Easypanel/Docker stability
   app.get("/api/health", (req, res) => {
-    res.json({ status: "ok", uptime: process.uptime() });
+    res.json({ 
+      status: "ok", 
+      uptime: process.uptime(),
+      timestamp: new Date().toISOString(),
+      env: process.env.NODE_ENV
+    });
   });
+
+  app.use(express.json({ limit: '50mb' }));
 
   // WhatsApp Notification Helper
   async function sendWhatsAppMessage(number: string, message: string) {
@@ -465,8 +470,23 @@ async function startServer() {
     });
   }
 
-  app.listen(PORT, "0.0.0.0", () => {
-    console.log(`Server running on http://localhost:${PORT}`);
+  const server = app.listen(PORT, "0.0.0.0", () => {
+    console.log(`🚀 Inspetor EPI rodando em http://0.0.0.0:${PORT}`);
+    console.log(`📢 Health Check disponível em http://0.0.0.0:${PORT}/api/health`);
+  });
+
+  // Handle Graceful Shutdown
+  process.on('SIGTERM', () => {
+    console.log('⚠️ SIGTERM recebido. Encerrando servidor graciosamente...');
+    server.close(() => {
+      console.log('✅ Servidor encerrado.');
+      process.exit(0);
+    });
+  });
+
+  process.on('SIGINT', () => {
+    console.log('⚠️ SIGINT recebido. Encerrando...');
+    server.close(() => process.exit(0));
   });
 }
 
