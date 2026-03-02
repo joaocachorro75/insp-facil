@@ -44,7 +44,7 @@ import {
 } from 'recharts';
 import jsPDF from 'jspdf';
 import html2canvas from 'html2canvas';
-import { GoogleGenAI, Type } from "@google/genai";
+// Google GenAI import removed - now using backend API with Groq
 import { User, Inspection, InspectionType, FormField, InspectionReport } from './types';
 
 // --- Components ---
@@ -808,69 +808,38 @@ const NewTypeForm = ({ onComplete, initialData }: { onComplete: () => void, init
         return;
       }
 
-      const apiKey = process.env.GEMINI_API_KEY;
-      if (!apiKey) {
-        throw new Error('GEMINI_API_KEY não configurada no ambiente.');
-      }
-      const ai = new GoogleGenAI({ apiKey });
-      let schema = [];
-
-      const promptContent = `Analise o seguinte conteúdo de um formulário de inspeção e gere um esquema JSON para um formulário dinâmico. 
-      O esquema deve ser um array de objetos, onde cada objeto tem: "label" (string), "type" (string: 'text', 'number', 'boolean', 'select'), "options" (array de strings, apenas se type for 'select'), "required" (boolean).
-      
-      IMPORTANTE: Se o formulário tiver perguntas de Sim/Não/NA, use type: 'boolean'. Se for múltipla escolha, use type: 'select'.`;
-
-      let parts: any[] = [{ text: promptContent }];
-
-      if (file) {
-        if (file.type === 'application/pdf') {
-          parts.push({
-            inlineData: {
-              data: file.data.split(',')[1],
-              mimeType: 'application/pdf'
-            }
-          });
-        } else if (file.type.includes('wordprocessingml') || file.type.includes('msword')) {
-          const extractRes = await fetch('/api/extract-text', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ fileData: file.data })
-          });
-          if (extractRes.ok) {
-            const { text } = await extractRes.json();
-            parts.push({ text: `Conteúdo do arquivo Word: ${text}` });
-          } else {
-            throw new Error("Falha ao extrair texto do Word");
-          }
+      // Extract text from Word if needed
+      let textContent = content;
+      if (file && (file.type.includes('wordprocessingml') || file.type.includes('msword'))) {
+        const extractRes = await fetch('/api/extract-text', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ fileData: file.data })
+        });
+        if (extractRes.ok) {
+          const { text } = await extractRes.json();
+          textContent = text;
         } else {
-          parts.push({ text: `Conteúdo: ${content}` });
+          throw new Error("Falha ao extrair texto do Word");
         }
-      } else {
-        parts.push({ text: `Conteúdo: ${content}` });
       }
 
-      const response = await ai.models.generateContent({
-        model: "gemini-3-flash-preview",
-        contents: { parts },
-        config: {
-          responseMimeType: "application/json",
-          responseSchema: {
-            type: Type.ARRAY,
-            items: {
-              type: Type.OBJECT,
-              properties: {
-                label: { type: Type.STRING },
-                type: { type: Type.STRING },
-                options: { type: Type.ARRAY, items: { type: Type.STRING } },
-                required: { type: Type.BOOLEAN }
-              },
-              required: ["label", "type", "required"]
-            }
-          }
-        }
+      // Call backend to generate form with Groq
+      const formRes = await fetch('/api/generate-form', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          content: textContent,
+          fileType: file?.type,
+          fileData: file?.data
+        })
       });
 
-      schema = JSON.parse(response.text);
+      if (!formRes.ok) {
+        throw new Error("Falha ao gerar formulário");
+      }
+
+      const { schema } = await formRes.json();
 
       const url = initialData ? `/api/inspection-types/${initialData.id}` : '/api/inspection-types';
       const method = initialData ? 'PUT' : 'POST';
@@ -1403,32 +1372,22 @@ const ReportView = ({ report }: { report: InspectionReport }) => {
   const generateAnalysis = async () => {
     setLoading(true);
     try {
-      const apiKey = process.env.GEMINI_API_KEY;
-      if (!apiKey) {
-        throw new Error('GEMINI_API_KEY não configurada no ambiente.');
+      // Call backend to analyze photos with Groq Vision
+      const response = await fetch('/api/analyze-photos', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          photos: report.photos,
+          inspectionType: report.type_name,
+          context: `Dados da inspeção: ${JSON.stringify(report.data)}`
+        })
+      });
+
+      if (!response.ok) {
+        throw new Error("Falha ao gerar análise");
       }
-      const ai = new GoogleGenAI({ apiKey });
-      const prompt = `Você é um especialista em segurança do trabalho. Analise os seguintes dados de uma inspeção de "${report.type_name}" e forneça um parecer técnico resumido, destacando riscos e recomendações.
-      Dados: ${JSON.stringify(report.data)}`;
 
-      const parts: any[] = [{ text: prompt }];
-      
-      // Add up to 3 photos for analysis
-      report.photos.slice(0, 3).forEach((photo: string) => {
-        parts.push({
-          inlineData: {
-            data: photo.split(',')[1],
-            mimeType: 'image/png'
-          }
-        });
-      });
-
-      const response = await ai.models.generateContent({
-        model: "gemini-3-flash-preview",
-        contents: { parts }
-      });
-
-      const analysisText = response.text;
+      const { analysis: analysisText } = await response.json();
       
       const res = await fetch(`/api/inspections/${report.id}/analysis`, { 
         method: 'POST',

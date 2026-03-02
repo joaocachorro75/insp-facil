@@ -458,6 +458,118 @@ async function startServer() {
     }
   });
 
+  // Generate Form Schema with Groq
+  app.post("/api/generate-form", async (req, res) => {
+    const { content, fileType, fileData } = req.body;
+    
+    if (!content && !fileData) {
+      return res.status(400).json({ error: "Nenhum conteúdo fornecido" });
+    }
+
+    try {
+      const GROQ_API_KEY = process.env.GROQ_VISION_KEY;
+      
+      if (!GROQ_API_KEY) {
+        return res.status(500).json({ error: "GROQ_VISION_KEY não configurada" });
+      }
+
+      const prompt = `Analise o seguinte conteúdo de um formulário de inspeção e gere um esquema JSON para um formulário dinâmico.
+
+O esquema deve ser um array de objetos, onde cada objeto tem:
+- "label" (string): Pergunta/campo
+- "type" (string): 'text', 'number', 'boolean', ou 'select'
+- "options" (array de strings, apenas se type for 'select')
+- "required" (boolean): Se é obrigatório
+
+IMPORTANTE: 
+- Perguntas de Sim/Não/NA → use type: 'boolean'
+- Múltipla escolha → use type: 'select'
+- Campos de texto → use type: 'text'
+- Números → use type: 'number'
+
+Conteúdo:
+${content || 'Ver imagem anexada'}
+
+Retorne APENAS o JSON, sem markdown ou explicação.`;
+
+      const messages: any[] = [{ role: "user", content: prompt }];
+      
+      // If there's file data (image or PDF), add it
+      if (fileData && fileType?.includes('pdf')) {
+        // For PDFs, we already extracted the text in the content
+        // No additional processing needed
+      } else if (fileData && fileType?.includes('image')) {
+        // For images, add to the vision request
+        const base64Data = fileData.includes(',') ? fileData.split(',')[1] : fileData;
+        messages[0].content = [
+          { type: "text", text: prompt },
+          {
+            type: "image_url",
+            image_url: { url: `data:image/jpeg;base64,${base64Data}` }
+          }
+        ];
+      }
+
+      const response = await fetch("https://api.groq.com/openai/v1/chat/completions", {
+        method: "POST",
+        headers: {
+          "Authorization": `Bearer ${GROQ_API_KEY}`,
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          model: "meta-llama/llama-4-scout-17b-16e-instruct",
+          messages,
+          max_tokens: 2048,
+          temperature: 0.3,
+          response_format: { type: "json_object" }
+        })
+      });
+
+      if (!response.ok) {
+        const errorData = await response.text();
+        console.error("Groq API error:", errorData);
+        return res.status(500).json({ error: "Erro ao gerar formulário" });
+      }
+
+      const data = await response.json();
+      let schema = data.choices[0]?.message?.content;
+      
+      // Parse and validate schema
+      try {
+        const parsed = JSON.parse(schema);
+        // If it's wrapped in an object with a key, extract the array
+        if (parsed.schema) {
+          schema = parsed.schema;
+        } else if (parsed.fields) {
+          schema = parsed.fields;
+        } else if (Array.isArray(parsed)) {
+          schema = parsed;
+        } else {
+          // Try to find any array in the response
+          const keys = Object.keys(parsed);
+          for (const key of keys) {
+            if (Array.isArray(parsed[key])) {
+              schema = parsed[key];
+              break;
+            }
+          }
+        }
+        
+        if (!Array.isArray(schema)) {
+          schema = [schema];
+        }
+        
+        res.json({ success: true, schema });
+      } catch (parseError) {
+        console.error("JSON parse error:", parseError);
+        res.status(500).json({ error: "Erro ao processar resposta da IA" });
+      }
+    } catch (error) {
+      console.error("Form generation error:", error);
+      res.status(500).json({ error: "Erro ao gerar formulário" });
+    }
+  });
+
   // AI Analysis with Groq Vision
   app.post("/api/analyze-photos", async (req, res) => {
     const { photos, inspectionType, context } = req.body;
