@@ -1,5 +1,6 @@
 FROM node:22-alpine
 
+# Build v2 - Removido Gemini, usando Groq Vision
 WORKDIR /app
 
 # Copy package files
