@@ -106,6 +106,14 @@ async function startServer() {
   const app = express();
   const PORT = 3000;
 
+  // Logger global para depuração de rede no Easypanel
+  app.use((req, res, next) => {
+    if (req.path !== '/api/health') {
+      console.log(`[${new Date().toISOString()}] 📥 ${req.method} ${req.path}`);
+    }
+    next();
+  });
+
   // 1. Health Check - MUST BE FIRST for Easypanel/Docker stability
   app.get("/api/health", (req, res) => {
     console.log(`[${new Date().toISOString()}] ❤️ Health Check solicitado`);
@@ -447,6 +455,86 @@ async function startServer() {
       res.json({ success: true });
     } catch (e) {
       res.status(500).json({ error: "Erro ao salvar configurações" });
+    }
+  });
+
+  // AI Analysis with Groq Vision
+  app.post("/api/analyze-photos", async (req, res) => {
+    const { photos, inspectionType, context } = req.body;
+    
+    if (!photos || !Array.isArray(photos) || photos.length === 0) {
+      return res.status(400).json({ error: "Nenhuma foto fornecida" });
+    }
+
+    try {
+      const GROQ_API_KEY = process.env.GROQ_VISION_KEY;
+      if (!GROQ_API_KEY) {
+        return res.status(500).json({ error: "GROQ_VISION_KEY não configurada" });
+      }
+      
+      // Prepare images for Groq Vision (max 5 images per request)
+      const imagesToAnalyze = photos.slice(0, 5);
+      const imageContents = imagesToAnalyze.map((photo: string) => {
+        // Remove data:image/...;base64, prefix if present
+        const base64Data = photo.includes(',') ? photo.split(',')[1] : photo;
+        return {
+          type: "image_url",
+          image_url: {
+            url: `data:image/jpeg;base64,${base64Data}`
+          }
+        };
+      });
+
+      const prompt = `Você é um inspetor técnico especializado em ${inspectionType || 'inspeções gerais'}.
+Analise as fotos enviadas e forneça:
+1. **Conformidades identificadas**: O que está correto
+2. **Não conformidades**: Problemas ou riscos encontrados
+3. **Recomendações**: Sugestões de melhoria
+4. **Nível de risco**: BAIXO, MÉDIO ou ALTO
+
+Contexto adicional: ${context || 'Nenhum contexto fornecido'}
+
+Responda em português brasileiro de forma clara e objetiva.`;
+
+      const response = await fetch("https://api.groq.com/openai/v1/chat/completions", {
+        method: "POST",
+        headers: {
+          "Authorization": `Bearer ${GROQ_API_KEY}`,
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          model: "meta-llama/llama-4-scout-17b-16e-instruct",
+          messages: [
+            {
+              role: "user",
+              content: [
+                { type: "text", text: prompt },
+                ...imageContents
+              ]
+            }
+          ],
+          max_tokens: 1024,
+          temperature: 0.7
+        })
+      });
+
+      if (!response.ok) {
+        const errorData = await response.text();
+        console.error("Groq API error:", errorData);
+        return res.status(500).json({ error: "Erro na análise de IA" });
+      }
+
+      const data = await response.json();
+      const analysis = data.choices[0]?.message?.content || "Não foi possível gerar análise";
+
+      res.json({ 
+        success: true, 
+        analysis,
+        photosAnalyzed: imagesToAnalyze.length 
+      });
+    } catch (error) {
+      console.error("Analysis error:", error);
+      res.status(500).json({ error: "Erro ao analisar fotos" });
     }
   });
 
